@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:14
+    container_name: user_management_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: ainzson
+      POSTGRES_PASSWORD: ainzson123
+      POSTGRES_DB: user_management
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ainzson-network
+
+
+networks:
+  ainzson-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
