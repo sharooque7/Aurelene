@@ -1,12 +1,12 @@
 spring:
-  security:
-    user:
-      name: ${SECURITY_USERNAME:admin}
-      password: ${SECURITY_PASSWORD:12345}
+#  security:
+#    user:
+#      name: ${SECURITY_USERNAME:admin}
+#      password: ${SECURITY_PASSWORD:12345}
   application:
     name: ${SPRING_APP_NAME:user-management-service}
   datasource:
-    url: jdbc:postgresql://localhost:5434/user_management?options=-c%20TimeZone=Asia/Kolkata
+    url: jdbc:postgresql://localhost:5432/user_management?options=-c%20TimeZone=Asia/Kolkata
     username: ainzson
     password: ainzson123
     driver-class-name: org.postgresql.Driver

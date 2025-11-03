@@ -3,6 +3,7 @@ package com.ainzson.usermanagementservice.mapper;
 import com.ainzson.usermanagementservice.dto.AddressDTO;
 import com.ainzson.usermanagementservice.dto.PhoneNumberDTO;
 import com.ainzson.usermanagementservice.dto.UserDTO;
+import com.ainzson.usermanagementservice.dto.UserResponseDTO;
 import com.ainzson.usermanagementservice.entities.Address;
 import com.ainzson.usermanagementservice.entities.PhoneNumber;
 import com.ainzson.usermanagementservice.entities.User;
@@ -16,6 +17,7 @@ public class UserMapper {
         Set<AddressDTO> addressDTOS = AddressMapper.toDto(user.getAddresses());
         Set<PhoneNumberDTO>  phoneNumberDTOS = PhoneNumberMapper.toDto(user.getPhoneNumbers());
 
+        userRequestDTO.setId(user.getId());
         userRequestDTO.setFirstName(user.getFirstName());
         userRequestDTO.setLastName(user.getLastName());
         userRequestDTO.setEmail(user.getEmail());
