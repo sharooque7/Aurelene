@@ -1,10 +1,14 @@
 package com.ainzson.usermanagementservice.service;
 
 import com.ainzson.usermanagementservice.dto.UserDTO;
+import com.ainzson.usermanagementservice.entities.Role;
+import com.ainzson.usermanagementservice.enums.RoleType;
 import com.ainzson.usermanagementservice.exception.DuplicateResourceException;
 import com.ainzson.usermanagementservice.exception.ResourceNotFoundException;
 import com.ainzson.usermanagementservice.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ainzson.usermanagementservice.entities.User;
@@ -18,22 +22,22 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService implements IUserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+//    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+//        this.userRepository = userRepository;
+//        this.passwordEncoder = passwordEncoder;
+//    }
 
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
 
         log.info("Creating user with email: {}", userDTO.getEmail());
-
-        if (userDTO.getEmail() == null || userDTO.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
 
         String email = userDTO.getEmail().trim().toLowerCase();
         userDTO.setEmail(email);
@@ -43,6 +47,10 @@ public class UserService implements IUserService {
                     throw new DuplicateResourceException("User with email " + userDTO.getEmail() + " already exists");
                 });
 
+        String password = userDTO.getPassword();
+        String hashedPassword = passwordEncoder.encode(password);
+        userDTO.setPassword(hashedPassword);
+
         User user = UserMapper.toEntity(userDTO);
 
         if (user.getStatus() == null) {
@@ -50,6 +58,8 @@ public class UserService implements IUserService {
         }
 
         User createdUser = userRepository.save(user);
+
+        roleService.assignRolesToUser(createdUser.getId(), RoleType.ROLE_USER);
 
         log.info("User created successfully with ID: {}", user.getId());
         return UserMapper.toDto(new UserDTO(), createdUser);

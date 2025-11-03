@@ -6,7 +6,7 @@ spring:
   application:
     name: ${SPRING_APP_NAME:user-management-service}
   datasource:
-    url: jdbc:postgresql://localhost:5432/user_management?options=-c%20TimeZone=Asia/Kolkata
+    url: jdbc:postgresql://localhost:5434/user_management?options=-c%20TimeZone=Asia/Calcutta
     username: ainzson
     password: ainzson123
     driver-class-name: org.postgresql.Driver
