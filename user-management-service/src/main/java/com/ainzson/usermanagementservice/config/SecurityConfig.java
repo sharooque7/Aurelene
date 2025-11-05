@@ -2,6 +2,7 @@ package com.ainzson.usermanagementservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -23,23 +24,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.authorizeHttpRequests((request) -> request.anyRequest().authenticated());
         return httpSecurity.authorizeHttpRequests((request) ->
-                request
-                        .requestMatchers("/api/v1/users/**").authenticated()
-                        .requestMatchers("/api/v1/address").permitAll()
-        )
+                        request
+                                // Specific rules first - in order of specificity
+                                .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll() // POST without auth
+                                .requestMatchers(HttpMethod.GET, "/api/v1/users").authenticated() // GET requires auth
+
+                                // General patterns after specific ones
+                                .requestMatchers("/api/v1/users/**").authenticated() // All other user endpoints
+                                .requestMatchers("/api/v1/address/**").authenticated()
+                                .requestMatchers("/api/v1/roles/**").authenticated()
+
+                                // Catch-all for any other requests
+                                .anyRequest().authenticated()
+                )
                 .csrf(csr -> csr.disable())
                 .formLogin(flc -> flc.disable())
-                        .httpBasic(withDefaults())
-                                .build();
-
+                .httpBasic(withDefaults())
+                .build();
     }
 
-    @Bean
-    public CompromisedPasswordChecker compromisedPasswordChecker() {
-        return new HaveIBeenPwnedRestApiPasswordChecker();
-    }
+//    @Bean
+//    public CompromisedPasswordChecker compromisedPasswordChecker() {
+//        return new HaveIBeenPwnedRestApiPasswordChecker();
+//    }
 
 //    @Bean
 //    public UserDetailsService userDetailsService() {

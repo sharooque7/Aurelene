@@ -20,6 +20,7 @@ public class Role extends Base{
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
 
+    @Enumerated(EnumType.STRING)
     public RoleType role;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)

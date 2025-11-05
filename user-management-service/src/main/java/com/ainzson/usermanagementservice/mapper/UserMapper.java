@@ -34,6 +34,7 @@ public class UserMapper {
         user.setLastName(userRequestDTO.getLastName());
         user.setEmail(userRequestDTO.getEmail());
         user.setAddresses(addresses);
+        user.setPassword(userRequestDTO.getPassword());
         user.setPhoneNumbers(phoneNumbers);
         return user;
 

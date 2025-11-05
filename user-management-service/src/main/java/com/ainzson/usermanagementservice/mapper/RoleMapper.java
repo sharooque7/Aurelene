@@ -8,7 +8,7 @@ public class RoleMapper {
 
     public static Role toEntity(RoleDto roleDto) {
         Role role = new Role();
-        RoleType roleType = RoleType.valueOf(roleDto.getRole());
+        RoleType roleType = RoleType.fromString(roleDto.getRole());
         role.setRole(roleType);
         return role;
     }
