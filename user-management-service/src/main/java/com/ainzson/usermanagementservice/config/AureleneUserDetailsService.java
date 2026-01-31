@@ -1,4 +1,4 @@
-package com.ainzson.usermanagementservice.service;
+package com.ainzson.usermanagementservice.config;
 
 
 import com.ainzson.usermanagementservice.entities.User;
